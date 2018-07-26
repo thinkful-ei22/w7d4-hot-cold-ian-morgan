@@ -9,7 +9,6 @@ const generateTarget = function(){
   return Math.ceil(Math.random() * 100)
 };
 
-
 export default class Game extends React.Component {
     constructor(props){
         super(props);
@@ -17,12 +16,13 @@ export default class Game extends React.Component {
         this.state = {
           oldGuesses: [],
           target: generateTarget(),
+          displayInfo: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNewGame = this.handleNewGame.bind(this);
+        this.handleInfo = this.handleInfo.bind(this);
     }
-
 
     handleSubmit(e) {
         e.preventDefault();
@@ -41,10 +41,17 @@ export default class Game extends React.Component {
       this.setState({oldGuesses: [], target: generateTarget()});
     }
 
+    handleInfo() {
+        this.setState({ displayInfo: !this.state.displayInfo });
+    }
+
     render(){
     return (
         <div>
-            <Header handleNewGame={this.handleNewGame}/>
+            <Header handleNewGame={this.handleNewGame}
+                    handleInfo={this.handleInfo}
+                    displayInfo={this.state.displayInfo}
+                    />
             <GuessSection
                 handleSubmit={this.handleSubmit}
                 currentGuess={this.state.oldGuesses[this.state.oldGuesses.length - 1]}
