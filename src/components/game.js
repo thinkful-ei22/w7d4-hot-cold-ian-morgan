@@ -5,33 +5,51 @@ import GuessSection from './guess-section';
 import GuessCount  from './guess-count';
 import GuessList from './guess-list';
 
+const generateTarget = function(){
+  return Math.ceil(Math.random() * 100)
+};
+
+
 export default class Game extends React.Component {
     constructor(props){
         super(props);
 
         this.state = {
-            oldGuesses: [],
-            target: Math.ceil(Math.random() * 100),
-            won: false,
-            temp: ''
+          oldGuesses: [],
+          target: generateTarget(),
         };
+
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-    handleSubmit(e) {
-        e.preventDefault();
-        let curGuess = e.target.userGuess.value;
-        this.setState({oldGuesses: this.state.oldGuesses.concat(curGuess)})
+        this.handleNewGame = this.handleNewGame.bind(this);
     }
 
+
+    handleSubmit(e) {
+        e.preventDefault();
+        let curGuess = parseInt(e.target.userGuess.value);
+        e.target.userGuess.value = '';
+        if(isNaN(curGuess)){
+          alert('Guess must be a number');
+        } else if (curGuess < 1 || curGuess > 100){
+          alert('Number is between 1 and 100');
+        } else {
+          this.setState({oldGuesses: this.state.oldGuesses.concat(curGuess)})
+        }
+    }
+
+    handleNewGame(){
+      this.setState({oldGuesses: [], target: generateTarget()});
+    }
 
     render(){
     return (
         <div>
-            <Header />
-            <GuessSection 
+            <Header handleNewGame={this.handleNewGame}/>
+            <GuessSection
                 handleSubmit={this.handleSubmit}
-                feedback={this.state.oldGuesses[this.state.oldGuesses.length - 1]}
-                target={this.state.target} />
+                currentGuess={this.state.oldGuesses[this.state.oldGuesses.length - 1]}
+                target={this.state.target} 
+                />
             <GuessCount count={this.state.oldGuesses.length} />
             <GuessList guesses={this.state.oldGuesses} />
         </div>

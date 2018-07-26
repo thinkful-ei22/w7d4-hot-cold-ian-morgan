@@ -10,27 +10,46 @@ export default function GuessSection(props) {
     function heatCheck(curGuess, target) {
         let feedback;
         const difference = Math.abs(target - curGuess)
+
         switch(true){
             case(!curGuess):
-                return feedback = 'Make a Guess!';
+                feedback = 'Make a Guess!';
+                break;
+            case(typeof curGuess !== 'number'):
+                feedback = 'Must enter a number';
+                break;
+            case(curGuess > 100 || curGuess < 1):
+                feedback = 'Number is between 1 and 100';
+                break;
             case (difference === 0):
-                return feedback = 'WINNER WINNER';
+                feedback = 'WINNER WINNER! Click NEW GAME to play again.';
+                break;
             case (difference <= 5):
-                return feedback = 'Really Hot';
+                feedback = 'Really Hot';
+                break;
             case (difference <= 15):
-                return feedback = 'Hot';
+                feedback = 'Hot';
+                break;
             case (difference <= 25):
-                return feedback = 'Warm';
+                feedback = 'Warm';
+                break;
             case (difference > 25):
-                return feedback = 'Cold';
+                feedback = 'Cold';
+                break;
         }
+
+      return feedback;
+
     }
-    
+
     
     return (
         <section>
-            <h2 id="feedback">{heatCheck(props.feedback, props.target)}</h2>
-            <GuessForm handleSubmit={props.handleSubmit}/>
+            <h2 id="feedback">{heatCheck(props.currentGuess, props.target)}</h2>
+            <GuessForm handleSubmit={props.handleSubmit}
+                  currentGuess={props.currentGuess}
+                  target={props.target}
+            />
         </section>
     );
 }
